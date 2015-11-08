@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>A simple map</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet' />
+<link rel="stylesheet" href="/assets/stylesheets/appication.css">
+<link rel="stylesheet" href="/css/style.css">
+
+
+<style>
+ body { margin:0; padding:0; }
+ #map { position:absolute; top:0; bottom:0; width:100%; }
+ .leaflet-popup-content { padding:30px 30px;}
+</style>
+</head>
+
+
+<body>
+<div id='map'></div>
+<script>
+L.mapbox.accessToken = 'pk.eyJ1Ijoia2VsbHlkZXJuIiwiYSI6ImNpZ3BmaWpxeTAwdjF1eG0xdjdocmhvenYifQ.ua0dnrQ9efuNZxwGg7R9zA';
+var map = L.mapbox.map('map', 'mapbox.streets')
+   .setView([40, -74.50], 9);
+
+var fixedMarker = L.marker(new L.LatLng({{lat1}}, {{long1}}), {
+   icon: L.mapbox.marker.icon({
+       'marker-color': 'ff8888'
+   })
+}).bindPopup('{{name1}} <br> <a href="{{turl1}}">Buy tickets<\a> <br> Flights from $1000...').addTo(map);
+
+var fixedMarker = L.marker(new L.LatLng({{lat2}}, {{long2}}), {
+   icon: L.mapbox.marker.icon({
+       'marker-color': 'ff8888'
+   })
+}).bindPopup('{{name2}} <br> <a href="{{turl2}}">Buy tickets<\a> <br> Flights from $1000...').addTo(map);
+
+var fixedMarker = L.marker(new L.LatLng({{lat3}}, {{long3}}), {
+   icon: L.mapbox.marker.icon({
+       'marker-color': 'ff8888'
+   })
+}).bindPopup('{{name3}} <br> <a href="{{turl3}}">Buy tickets<\a> <br> Flights from $1000...').addTo(map);
+
+var fixedMarker = L.marker(new L.LatLng({{lat4}}, {{long4}}), {
+   icon: L.mapbox.marker.icon({
+       'marker-color': 'ff8888'
+   })
+}).bindPopup('{{name4}} <br> <a href="{{turl4}}">Buy tickets<\a> <br> Flights from $1000...').addTo(map);
+
+var fixedMarker = L.marker(new L.LatLng({{lat5}}, {{long5}}), {
+   icon: L.mapbox.marker.icon({
+       'marker-color': 'ff8888'
+   })
+}).bindPopup('{{name5}} <br> <a href="{{turl5}}">Buy tickets<\a> <br> Flights from $1000...').addTo(map);
+
+var fixedMarker = L.marker(new L.LcatLng({{lat6}}, {{long6}}), {
+   icon: L.mapbox.marker.icon({
+       'marker-color': 'ff8888'
+   })
+}).bindPopup('{{name6}} <br> <a href="{{turl6}}">Buy tickets<\a> <br> Flights from $1000...').addTo(map);
+
+var fixedMarker = L.marker(new L.LatLng({{lat7}}, {{long7}}), {
+   icon: L.mapbox.marker.icon({
+       'marker-color': 'ff8888'
+   })
+}).bindPopup('{{name7}} <br> <a href="{{turl7}}">Buy tickets<\a> <br> Flights from $1000...').addTo(map);
+
+var fixedMarker = L.marker(new L.LatLng({{lat8}}, {{long8}}), {
+   icon: L.mapbox.marker.icon({
+       'marker-color': 'ff8888'
+   })
+}).bindPopup('{{name8}} <br> <a href="{{turl8}}">Buy tickets<\a> <br> Flights from $1000...').addTo(map);
+
+var fixedMarker = L.marker(new L.LatLng({{lat9}}, {{long9}}), {
+   icon: L.mapbox.marker.icon({
+       'marker-color': 'ff8888'
+   })
+}).bindPopup('{{name9}} <br> <a href="{{turl9}}">Buy tickets<\a> <br> Flights from $1000...').addTo(map);
+
+var fixedMarker = L.marker(new L.LatLng({{lat10}}, {{long10}}), {
+   icon: L.mapbox.marker.icon({
+       'marker-color': 'ff8888'
+   })
+}).bindPopup('{{name10}} <br> <a href="{{turl10}}">Buy tickets<\a> <br> Flights from $1000...').addTo(map);
+
+</script>
+</body>
+</html>
