@@ -2,7 +2,7 @@ from flask import Flask
 from flask import request
 from flask import render_template
 from constants import ORIGIN, STUBHUB_BASE_URL
-from api_calls import get_events, get_flights
+from api_calls import get_events, get_listings, get_flights
 
 app = Flask(__name__)
 
@@ -56,6 +56,9 @@ def get_and_show_results():
 
         description = ' <br> '.join([name, venue, geo_string, date_str, ticket_link])
         params_dict['description{}'.format(idx+1)] = description
+
+        print get_listings(event['id'])
+
         # for date, city in zip(dates, cities):
         #     get_emirates_results(date, ORIGIN, city, 'Economy')
     return render_template("results.html", **params_dict)
