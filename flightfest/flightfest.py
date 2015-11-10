@@ -2,7 +2,7 @@ from flask import Flask
 from flask import request
 from flask import render_template
 from constants import ORIGIN, STUBHUB_BASE_URL
-from api_calls import get_events, get_flights
+from api_calls import get_events, get_listings, get_flights
 
 app = Flask(__name__)
 
@@ -27,13 +27,40 @@ def get_and_show_results():
     for idx, event in enumerate(events):
         params_dict['lat{}'.format(idx+1)] = event['venue']['latitude']
         params_dict['long{}'.format(idx+1)] = event['venue']['longitude']
-        params_dict['name{}'.format(idx+1)] = event['name']
-        params_dict['turl{}'.format(idx+1)] = ''.join([STUBHUB_BASE_URL, event['eventUrl']])
-        params_dict['city{}'.format(idx+1)] = event['venue']['longitude']
-        params_dict['date{}'.format(idx+1)] = event['eventDateLocal'][:10]
 
-    # for date, city in zip(dates, cities):
-    #     get_emirates_results(date, ORIGIN, city, 'Economy')
+        performers = event.get('performers')
+        if performers:
+            name = performers[0]['name']
+        else:
+            performers_collection = event.get('performersCollection')
+            if performers_collection:
+                name = performers_collection[0]['name']
+            else:
+                name = event['name']
+
+        venue = event['displayAttributes']['primaryName']
+
+        venue_dict = event['venue']
+        city, state, country = venue_dict['city'], venue_dict['state'], venue_dict['country']
+        if country == 'US':
+            geo_parts = [city, state]
+        else:
+            geo_parts = [city, country]
+        geo_string = ', '.join(geo_parts)
+
+        ticket_url = ''.join([STUBHUB_BASE_URL, event['eventUrl']])
+        ticket_link = """<a href="{}">Buy show tickets<\\a>""".format(ticket_url)
+
+        date = event['eventDateLocal']
+        date_str = '/'.join([date[5:7], date[8:10], date[:4]])
+
+        description = ' <br> '.join([name, venue, geo_string, date_str, ticket_link])
+        params_dict['description{}'.format(idx+1)] = description
+
+        print get_listings(event['id'])
+
+        # for date, city in zip(dates, cities):
+        #     get_emirates_results(date, ORIGIN, city, 'Economy')
     return render_template("results.html", **params_dict)
 
 
