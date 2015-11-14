@@ -79,11 +79,14 @@ def popup_content(event):
     # Set ticket link
     tlink = ticket_link(event)
 
+    # Set image
+    image = '<img src="{}" alt="" style="width:100px">'.format(event['imageUrl'])
+
     # Set flight string
     flight_str = flight_string(date_str, geo_string, FLIGHT_CLASS)
 
     # Build popup content
-    content = ' <br> '.join([name, venue, geo_string, date_str, flight_str, tlink])
+    content = ' <br> '.join([image, name, venue, geo_string, date_str, flight_str, tlink])
     return content
 
 
