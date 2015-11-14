@@ -1,9 +1,14 @@
+import dateutil.parser as duparse
+
 from flask import Flask
 from flask import request
 from flask import render_template
-from constants import ORIGIN, STUBHUB_BASE_URL
+from constants import ORIGIN, STUBHUB_BASE_URL, DAYS_AFTER_TO_RETURN, DAYS_BEFORE_TO_DEPART, \
+    FLIGHT_CLASS
 from api_calls import get_events, get_listings, get_flights
 from collections import Counter
+from datetime import datetime, timedelta
+from dateutil.parser import parse as datepar
 
 app = Flask(__name__)
 
@@ -35,8 +40,6 @@ def get_and_show_results():
         # with open('listing.json', 'w') as f:
         #     json.dump(get_listings(event['id']), f)
 
-        # for date, city in zip(dates, cities):
-        #     get_emirates_results(date, ORIGIN, city, 'Economy')
     return render_template("results.html", **params_dict)
 
 
@@ -59,20 +62,23 @@ def popup_content(event):
     venue_dict = event['venue']
     city, state, country = venue_dict['city'], venue_dict['state'], venue_dict['country']
     if country == 'US':
-        geo_parts = [city, state]
+        geo_parts = [city, state, country]
     else:
         geo_parts = [city, country]
     geo_string = ', '.join(geo_parts)
-
-    # Set ticket link
-    tlink = ticket_link(event)
 
     # Set date string
     date = event['eventDateLocal']
     date_str = '/'.join([date[5:7], date[8:10], date[:4]])
 
+    # Set ticket link
+    tlink = ticket_link(event)
+
+    # Set flight string
+    flight_str = flight_string(date_str, geo_string, FLIGHT_CLASS)
+
     # Build popup content
-    content = ' <br> '.join([name, venue, geo_string, date_str, tlink])
+    content = ' <br> '.join([name, venue, geo_string, date_str, flight_str, tlink])
     return content
 
 
@@ -96,6 +102,32 @@ def ticket_link(event):
         link_text = "No tickets currently on StubHub"
 
     return """<a href="{}">{}<\\a>""".format(ticket_url, link_text)
+
+
+def flight_string(date_str, destination, flight_class):
+    date = datepar(date_str)
+
+    departure_date = date - timedelta(days=DAYS_BEFORE_TO_DEPART)
+    departure_flights = get_flights(departure_date, ORIGIN, destination, flight_class)
+
+    return_date = date + timedelta(days=DAYS_AFTER_TO_RETURN)
+    return_flights = get_flights(return_date, destination, ORIGIN, flight_class)
+
+    currencies = [flight['Currency'] for flight in departure_flights + return_flights]
+    most_common_currency = Counter(currencies).most_common()[0][0]
+
+    min_departure_price = min_flight_price(departure_flights, most_common_currency)
+    min_return_price = min_flight_price(return_flights, most_common_currency)
+
+    min_price = min_departure_price + min_return_price
+
+    return "Flights from {} {}".format(min_price, most_common_currency)
+
+
+def min_flight_price(flights, currency):
+    return min([int(flight['FlightFare'].split(flight['Currency'])[0]) for flight in flights
+                if flight['Currency'] == currency])
+
 
 
 if __name__ == '__main__':
