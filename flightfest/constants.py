@@ -2,6 +2,7 @@ STUBHUB_API = 'https://api.stubhub.com/'
 
 STUBHUB_EVENT_SEARCH_API = ''.join([STUBHUB_API, '/search/catalog/events/v3?&'])
 CONCERT_QUERY = 'categoryId=1'
+SORT_BY_POPULARITY = 'sort=popularity desc'
 
 STUBHUB_INVENTORY_SEARCH_API = ''.join([STUBHUB_API, '/search/inventory/v1?&'])
 

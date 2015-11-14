@@ -1,12 +1,13 @@
 from constants import STUBHUB_EVENT_SEARCH_API, STUBHUB_INVENTORY_SEARCH_API, CONCERT_QUERY, \
-    EMIRATES_API
+    EMIRATES_API, SORT_BY_POPULARITY
 from config_local import EMIRATES_API_KEY, STUBHUB_API_KEY
 import requests
 import json
 
 
 def get_events(query):
-    query = '&'.join([STUBHUB_EVENT_SEARCH_API, CONCERT_QUERY, ''.join(['q=', query])])
+    query = '&'.join([STUBHUB_EVENT_SEARCH_API, CONCERT_QUERY, SORT_BY_POPULARITY,
+                      ''.join(['q=', query])])
     headers = {'contentType': 'application/json',
                'Authorization': 'Bearer {}'.format(STUBHUB_API_KEY),
                'Accept': 'application/json'}
