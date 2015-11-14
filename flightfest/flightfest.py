@@ -28,6 +28,9 @@ def get_and_show_results():
 
     events = get_events(search_terms)
 
+    if not events:
+        return render_template("no_results.html")
+
     params_dict = {}
 
     for idx, event in enumerate(events):
