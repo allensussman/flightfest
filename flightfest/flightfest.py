@@ -35,10 +35,10 @@ def get_and_show_results():
         params_dict['long{}'.format(idx+1)] = event['venue']['longitude']
         params_dict['description{}'.format(idx+1)] = popup_content(event)
 
-        # # get min ticket price
-        # import json
-        # with open('listing.json', 'w') as f:
-        #     json.dump(get_listings(event['id']), f)
+    for idx_2 in range(idx, 10):
+        params_dict['lat{}'.format(idx_2+1)] = params_dict['lat1']
+        params_dict['long{}'.format(idx_2+1)] = params_dict['long1']
+        params_dict['description{}'.format(idx_2+1)] = params_dict['description1']
 
     return render_template("results.html", **params_dict)
 
@@ -55,9 +55,6 @@ def popup_content(event):
         else:
             name = event['name']
 
-    # Set venue name
-    venue = event['displayAttributes']['primaryName']
-
     # Set location string
     venue_dict = event['venue']
     city, state, country = venue_dict['city'], venue_dict['state'], venue_dict['country']
@@ -66,6 +63,11 @@ def popup_content(event):
     else:
         geo_parts = [city, country]
     geo_string = ', '.join(geo_parts)
+
+    # Set venue name
+    venue = event['displayAttributes'].get('primaryName')
+    if not venue:
+        venue = venue_dict['name']
 
     # Set date string
     date = event['eventDateLocal']
