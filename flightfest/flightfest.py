@@ -29,7 +29,27 @@ def get_and_show_results():
     start_date = request.form['start_date']
     end_date = request.form['end_date']
 
-    events = get_events(search_terms)
+    all_events = get_events(search_terms)
+
+    # set event time at origin for every event
+    for event in all_events:
+        event_datetime_utc = datepar(event['eventDateUTC']).replace(tzinfo=None)
+        event['eventDateTimeOrigin'] = event_datetime_utc + timedelta(hours=ORIGIN_TIMEZONE)
+
+    # filter events that I can't make it to.
+    now_origin = datetime.utcnow() + timedelta(hours=ORIGIN_TIMEZONE)
+    # events = filter(lambda x: x['eventDateTimeOrigin'] > now_origin, all_events)
+
+    now_utc = datetime.utcnow()
+
+    events = []
+    for event in all_events:
+        event_datetime_utc = datepar(event['eventDateUTC']).replace(tzinfo=None)
+
+        venue_dict = event['venue']
+        vincenty(ORIGIN)
+        if event_datetime_utc > now_utc :
+
 
     if not events:
         return render_template("no_results.html")
@@ -86,7 +106,8 @@ def popup_content(event):
     image = '<img src="{}" alt="" style="width:100px">'.format(event['imageUrl'])
 
     # Set flight string
-    f_link = flight_link(venue_dict, event['eventDateUTC'], FLIGHT_CLASS)
+    f_link = flight_link(venue_dict, event['eventDateTimeOrigin'],
+                         event['eventDateLocal'], FLIGHT_CLASS)
 
     # Build popup content
     content = ' <br> '.join([image, name, venue, geo_string, date_str, f_link, tlink])
@@ -115,18 +136,19 @@ def ticket_link(event):
     return link(ticket_url, link_text)
 
 
-def flight_link(venue, concert_datetime_utc_str, flight_class):
-    # Determine departure and return dates.  Departure time is three days before the concert,
-    # in the timezone of the origin airport, or the current time at the origin airport, whichever
-    # is later.
-    concert_datetime_utc = datepar(concert_datetime_utc_str).replace(tzinfo=None)
-    min_departure_datetime_utc = (concert_datetime_utc - timedelta(days=DAYS_BEFORE_TO_DEPART))
-    now_utc = datetime.utcnow()
-    departure_datetime_utc = max(min_departure_datetime_utc, now_utc)
-    departure_datetime_local = departure_datetime_utc + timedelta(hours=ORIGIN_TIMEZONE)
-    departure_date = departure_datetime_local.strftime(DATE_FORMAT)
+def flight_link(venue, event_datetime_origin, event_date_local, flight_class):
+    # Determine departure and return dates.
+    # Departure time is three days before the concert, in the timezone of the origin airport,
+    # or the current time at the origin airport, whichever is later.
+    min_departure_datetime_origin = event_datetime_origin - timedelta(days=DAYS_BEFORE_TO_DEPART)
+    now_origin = datetime.utcnow() + timedelta(hours=ORIGIN_TIMEZONE)
+    departure_datetime_origin = max(min_departure_datetime_origin, now_origin)
+    departure_date = departure_datetime_origin.strftime(DATE_FORMAT)
 
-    return_date = (concert_datetime_utc + timedelta(days=DAYS_AFTER_TO_RETURN)).strftime(DATE_FORMAT)
+    # Return time is three days after the concert in the concert time zone.
+    event_datetime_local = datepar(event_date_local).replace(tzinfo=None)
+    return_date = (event_datetime_local + timedelta(days=DAYS_AFTER_TO_RETURN)).strftime(
+        DATE_FORMAT)
 
     # Find nearest airport to venue
     distances = [vincenty((venue['latitude'], venue['longitude']),
