@@ -4,7 +4,7 @@ from flask import Flask
 from flask import request
 from flask import render_template
 from constants import ORIGIN, STUBHUB_BASE_URL, DAYS_AFTER_TO_RETURN, DAYS_BEFORE_TO_DEPART, \
-    FLIGHT_CLASS
+    FLIGHT_CLASS, USE_MOCK_EMIRATES_API_FOR_SPEED, MOCK_FLIGHT_CURRENCY, MOCK_MIN_FLIGHT_PRICE
 from api_calls import get_events, get_listings, get_flights
 from collections import Counter
 from datetime import datetime, timedelta
@@ -109,17 +109,22 @@ def ticket_link(event):
 def flight_string(date_str, destination, flight_class):
     date = datepar(date_str)
 
-    departure_date = date - timedelta(days=DAYS_BEFORE_TO_DEPART)
-    departure_flights = get_flights(departure_date, ORIGIN, destination, flight_class)
+    if not USE_MOCK_EMIRATES_API_FOR_SPEED:
+        departure_date = date - timedelta(days=DAYS_BEFORE_TO_DEPART)
+        departure_flights = get_flights(departure_date, ORIGIN, destination, flight_class)
 
-    return_date = date + timedelta(days=DAYS_AFTER_TO_RETURN)
-    return_flights = get_flights(return_date, destination, ORIGIN, flight_class)
+        return_date = date + timedelta(days=DAYS_AFTER_TO_RETURN)
+        return_flights = get_flights(return_date, destination, ORIGIN, flight_class)
 
-    currencies = [flight['Currency'] for flight in departure_flights + return_flights]
-    most_common_currency = Counter(currencies).most_common()[0][0]
+        currencies = [flight['Currency'] for flight in departure_flights + return_flights]
+        most_common_currency = Counter(currencies).most_common()[0][0]
 
-    min_departure_price = min_flight_price(departure_flights, most_common_currency)
-    min_return_price = min_flight_price(return_flights, most_common_currency)
+        min_departure_price = min_flight_price(departure_flights, most_common_currency)
+        min_return_price = min_flight_price(return_flights, most_common_currency)
+    else:
+        most_common_currency = MOCK_FLIGHT_CURRENCY
+        min_departure_price = MOCK_MIN_FLIGHT_PRICE
+        min_return_price = MOCK_MIN_FLIGHT_PRICE
 
     min_price = min_departure_price + min_return_price
 
