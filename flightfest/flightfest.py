@@ -1,14 +1,17 @@
-import dateutil.parser as duparse
+import json
 
 from flask import Flask
 from flask import request
 from flask import render_template
 from constants import ORIGIN, STUBHUB_BASE_URL, DAYS_AFTER_TO_RETURN, DAYS_BEFORE_TO_DEPART, \
-    FLIGHT_CLASS, USE_MOCK_EMIRATES_API_FOR_SPEED, MOCK_FLIGHT_CURRENCY, MOCK_MIN_FLIGHT_PRICE
+    FLIGHT_CLASS, USE_MOCK_EMIRATES_API_FOR_SPEED, MOCK_FLIGHT_CURRENCY, MOCK_MIN_FLIGHT_PRICE, \
+    DATE_FORMAT, FLIGHT_URL_TEMPLATE, AIRPORT_LAT_LONG_FILE, AIRPORT_TIMEZONE_FILE
 from api_calls import get_events, get_listings, get_flights
 from collections import Counter
 from datetime import datetime, timedelta
 from dateutil.parser import parse as datepar
+from geopy.distance import vincenty
+from operator import itemgetter
 
 app = Flask(__name__)
 
@@ -83,10 +86,10 @@ def popup_content(event):
     image = '<img src="{}" alt="" style="width:100px">'.format(event['imageUrl'])
 
     # Set flight string
-    flight_str = flight_string(date_str, geo_string, FLIGHT_CLASS)
+    f_link = flight_link(venue_dict, event['eventDateUTC'], FLIGHT_CLASS)
 
     # Build popup content
-    content = ' <br> '.join([image, name, venue, geo_string, date_str, flight_str, tlink])
+    content = ' <br> '.join([image, name, venue, geo_string, date_str, f_link, tlink])
     return content
 
 
@@ -109,17 +112,39 @@ def ticket_link(event):
     else:
         link_text = "No tickets currently on StubHub"
 
-    return """<a href="{}">{}<\\a>""".format(ticket_url, link_text)
+    return link(ticket_url, link_text)
 
 
-def flight_string(date_str, destination, flight_class):
-    date = datepar(date_str)
+def flight_link(venue, concert_datetime_utc_str, flight_class):
+    # Determine departure and return dates.  Departure time is three days before the concert,
+    # in the timezone of the origin airport, or the current time at the origin airport, whichever
+    # is later.
+    concert_datetime_utc = datepar(concert_datetime_utc_str).replace(tzinfo=None)
+    min_departure_datetime_utc = (concert_datetime_utc - timedelta(days=DAYS_BEFORE_TO_DEPART))
+    now_utc = datetime.utcnow()
+    departure_datetime_utc = max(min_departure_datetime_utc, now_utc)
+    departure_datetime_local = departure_datetime_utc + timedelta(hours=ORIGIN_TIMEZONE)
+    departure_date = departure_datetime_local.strftime(DATE_FORMAT)
 
+    return_date = (concert_datetime_utc + timedelta(days=DAYS_AFTER_TO_RETURN)).strftime(DATE_FORMAT)
+
+    # Find nearest airport to venue
+    distances = [vincenty((venue['latitude'], venue['longitude']),
+                          (airport['lat'], airport['long'])) for airport in AIRPORT_LAT_LONGS]
+    destination = min(zip(AIRPORT_LAT_LONGS, distances), key=itemgetter(1))[0]['code']
+
+    # Set flight link text
+    link_text = flight_string(departure_date, return_date, destination, flight_class)
+
+    # Set flight url
+    flight_url = FLIGHT_URL_TEMPLATE.format(ORIGIN, destination, departure_date, return_date)
+
+    return link(flight_url, link_text)
+
+
+def flight_string(departure_date, return_date, destination, flight_class):
     if not USE_MOCK_EMIRATES_API_FOR_SPEED:
-        departure_date = date - timedelta(days=DAYS_BEFORE_TO_DEPART)
         departure_flights = get_flights(departure_date, ORIGIN, destination, flight_class)
-
-        return_date = date + timedelta(days=DAYS_AFTER_TO_RETURN)
         return_flights = get_flights(return_date, destination, ORIGIN, flight_class)
 
         currencies = [flight['Currency'] for flight in departure_flights + return_flights]
@@ -142,6 +167,16 @@ def min_flight_price(flights, currency):
                 if flight['Currency'] == currency])
 
 
+def link(url, link_text):
+    return """<a target="_blank" href="{}">{}<\\a>""".format(url, link_text)
 
 if __name__ == '__main__':
+    with open(AIRPORT_LAT_LONG_FILE) as f:
+        AIRPORT_LAT_LONGS = json.load(f)
+
+    with open(AIRPORT_TIMEZONE_FILE) as f:
+        AIRPORT_TIMEZONES = json.load(f)
+
+    ORIGIN_TIMEZONE = AIRPORT_TIMEZONES[ORIGIN]
+
     app.run("0.0.0.0", port=5000)

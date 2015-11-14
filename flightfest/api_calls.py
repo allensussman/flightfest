@@ -23,7 +23,7 @@ def get_listings(event_id):
 
 
 def get_flights(date, origin, destination, flight_class):
-    query = ''.join([EMIRATES_API, '&'.join([''.join(['FlightDate=', date.strftime('%Y-%m-%d')]),
+    query = ''.join([EMIRATES_API, '&'.join([''.join(['FlightDate=', date]),
                                              ''.join(['Origin=', origin]),
                                              ''.join(['Destination=', destination]),
                                              ''.join(['Class=', flight_class])])])

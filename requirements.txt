@@ -1,3 +1,4 @@
 flask==0.10.1
 requests==2.6.0
 python-dateutil==2.4.2
+geopy==1.11.0
