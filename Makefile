@@ -1,3 +1,4 @@
+SHELL := $(shell which bash)
 ACTIVATE_VENV =  source venv/bin/activate
 
 setup: requirements.txt
