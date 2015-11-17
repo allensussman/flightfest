@@ -1,7 +1,5 @@
 import os
 
-PROJECT_NAME = 'flightfest'
-
 STUBHUB_API = 'https://api.stubhub.com/'
 
 STUBHUB_EVENT_SEARCH_API = ''.join([STUBHUB_API, '/search/catalog/events/v3?&'])
@@ -30,6 +28,6 @@ DATE_FORMAT = '%Y-%m-%d'
 
 FLIGHT_URL_TEMPLATE = 'http://www.kayak.com/flights/{},nearby-{},nearby/{}-flexible/{}-flexible'
 
-AIRPORT_JSONS_DIR = os.path.join(PROJECT_NAME,'static')
+AIRPORT_JSONS_DIR = os.path.join(os.path.dirname(__file__), 'static')
 AIRPORT_LAT_LONG_FILE = os.path.join(AIRPORT_JSONS_DIR, 'airport_lat_longs.json')
 AIRPORT_TIMEZONE_FILE = os.path.join(AIRPORT_JSONS_DIR, 'airport_timezone.json')
