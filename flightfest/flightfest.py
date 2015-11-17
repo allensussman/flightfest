@@ -17,6 +17,14 @@ app = Flask(__name__)
 
 app.debug = True
 
+with open(AIRPORT_LAT_LONG_FILE) as f:
+    AIRPORT_LAT_LONGS = json.load(f)
+
+with open(AIRPORT_TIMEZONE_FILE) as f:
+    AIRPORT_TIMEZONES = json.load(f)
+
+ORIGIN_TIMEZONE = AIRPORT_TIMEZONES[ORIGIN]
+
 
 @app.route('/')
 def render_home_page():
@@ -171,12 +179,5 @@ def link(url, link_text):
     return """<a target="_blank" href="{}">{}<\\a>""".format(url, link_text)
 
 if __name__ == '__main__':
-    with open(AIRPORT_LAT_LONG_FILE) as f:
-        AIRPORT_LAT_LONGS = json.load(f)
-
-    with open(AIRPORT_TIMEZONE_FILE) as f:
-        AIRPORT_TIMEZONES = json.load(f)
-
-    ORIGIN_TIMEZONE = AIRPORT_TIMEZONES[ORIGIN]
 
     app.run("0.0.0.0", port=5000)
