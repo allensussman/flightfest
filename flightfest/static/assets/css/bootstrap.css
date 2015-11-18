@@ -157,6 +157,8 @@ textarea {
   margin: 0;
   font-family: inherit;
   font-size: 100%;
+  padding: 20px 40px;
+  border-radius: 8px;
 }
 
 button,
@@ -2292,6 +2294,10 @@ fieldset[disabled] .btn-default.active {
   color: #ffffff;
   background-color: #8ad6f5;
   border-color: #8ad6f5;
+  padding: 20px 50px;
+  font-size: 20px;
+  font-weight: 400;
+  margin-top: 50px;
 }
 
 .btn-primary:hover,
@@ -5068,7 +5074,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
 
 .label {
   display: inline;
-  padding: .2em .6em .3em;
+  padding: .8em .3em;
   font-size: 75%;
   font-weight: bold;
   line-height: 1;
@@ -5076,7 +5082,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: .25em;
+  border-radius: 3px;
 }
 
 .label[href]:hover,
@@ -7058,19 +7064,27 @@ td.visible-print {
   }
 }
 
-/*New stlyes */
 
-.padding-content {
-  padding: 100px;
+@media only screen and (min-device-width : 375px) and (max-device-width : 667px) {
+.btn-primary {
+    margin-top: 150px;
+  }
+
+  #headerwrap {
+   min-height: 700px;
+}
 }
 
-.input-fields {
-  display: block;
+@media only screen and (min-device-width : 320px) and (max-device-width : 568px) { 
+   .btn-primary {
+    margin-top: 150px;
+  }
+
+  #headerwrap {
+   min-height: 700px;
+}
 }
 
-.top-content {
-  margin: 0px auto;
-  display: block;
-}
+
 
 
