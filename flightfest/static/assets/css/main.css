@@ -90,8 +90,8 @@ a:after {
 }
 
 .navbar-inverse {
-	background: #000000;
-	border-color: #2d2d2d;
+	background: #3d3d3d;
+	border-color: #3d3d3d;
 }
 
 .navbar-inverse .navbar-nav > .active > a {
@@ -482,6 +482,7 @@ a:after {
 
 .footer {
     background-color: #89D5F4;
+    text-align: center;
     padding: 200px 0px;
 }
 
@@ -537,4 +538,10 @@ a:after {
     font-size: 20px;
     font-weight: 400;
     margin: 30px 0px 160px 0px;
+}
+
+/*map styling */
+
+#map {
+    padding: 60px 0px 0px 60px;
 }

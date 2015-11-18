@@ -9,82 +9,140 @@
 <link rel="stylesheet" href="/assets/stylesheets/appication.css">
 <link rel="stylesheet" href="/css/style.css">
 
+ <!-- Bootstrap core CSS -->
+<link href="static/assets/css/bootstrap.css" rel="stylesheet">
+<link href="static/assets/css/main.css" rel="stylesheet">
+
 
 <style>
  body { margin:0; padding:0; }
  #map { position:absolute; top:0; bottom:0; width:100%; }
- .leaflet-popup-content { padding:30px 30px;}
+ .leaflet-popup-content { padding:30px 30px;
+  width: 400px;
+  font-size: 18px;
+    font-family: "Raleway";
+    font-weight: 300;
+    color: #3d3d3d;
+    line-height: 1.4em;
+  }
+ .leaflet-container a {
+    font-size: 18px;
+    font-family: "Raleway";
+    font-weight: 300;
+    color: #89d5f4;
+    text-align: center;
+ }
+
+.leaflet-popup-content > img {
+  width: 300px;
+  text-align: center;
+  padding-bottom: 10px;
+ }
+
+ .leaflet-popup-close-button+.leaflet-popup-content-wrapper .leaflet-popup-content {
+  padding: 20px;
+  text-align: center;
+ }
+
 </style>
 </head>
 
 
 <body>
+
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/"><img src="static/assets/img/Flight-fest-logo.png" alt="" height="65"></a>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="active"><a href="/">HOME</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+
+
 <div id='map'></div>
 <script>
 L.mapbox.accessToken = 'pk.eyJ1Ijoia2VsbHlkZXJuIiwiYSI6ImNpZ3BmaWpxeTAwdjF1eG0xdjdocmhvenYifQ.ua0dnrQ9efuNZxwGg7R9zA';
 var map = L.mapbox.map('map', 'mapbox.streets')
-   .setView([40, -74.50], 9);
+   .setView([40, -74.50], 4);
 
 var fixedMarker = L.marker(new L.LatLng({{lat1}}, {{long1}}), {
    icon: L.mapbox.marker.icon({
-       'marker-color': 'ff8888'
+       'marker-color': 'f28b9a'
    })
 }).bindPopup('{{description1|safe}}').addTo(map);
 
 var fixedMarker = L.marker(new L.LatLng({{lat2}}, {{long2}}), {
    icon: L.mapbox.marker.icon({
-       'marker-color': 'ff8888'
+       'marker-color': 'f28b9a'
    })
 }).bindPopup('{{description2|safe}}').addTo(map);
 
 var fixedMarker = L.marker(new L.LatLng({{lat3}}, {{long3}}), {
    icon: L.mapbox.marker.icon({
-       'marker-color': 'ff8888'
+       'marker-color': 'f28b9a'
    })
 }).bindPopup('{{description3|safe}}').addTo(map);
 
 var fixedMarker = L.marker(new L.LatLng({{lat4}}, {{long4}}), {
    icon: L.mapbox.marker.icon({
-       'marker-color': 'ff8888'
+       'marker-color': 'f28b9a'
    })
 }).bindPopup('{{description4|safe}}').addTo(map);
 
 var fixedMarker = L.marker(new L.LatLng({{lat5}}, {{long5}}), {
    icon: L.mapbox.marker.icon({
-       'marker-color': 'ff8888'
+       'marker-color': 'f28b9a'
    })
 }).bindPopup('{{description5|safe}}').addTo(map);
 
 var fixedMarker = L.marker(new L.LcatLng({{lat6}}, {{long6}}), {
    icon: L.mapbox.marker.icon({
-       'marker-color': 'ff8888'
+       'marker-color': 'f28b9a'
    })
 }).bindPopup('{{description6|safe}}').addTo(map);
 
 var fixedMarker = L.marker(new L.LatLng({{lat7}}, {{long7}}), {
    icon: L.mapbox.marker.icon({
-       'marker-color': 'ff8888'
+       'marker-color': 'f28b9a'
    })
 }).bindPopup('{{description7|safe}}').addTo(map);
 
 var fixedMarker = L.marker(new L.LatLng({{lat8}}, {{long8}}), {
    icon: L.mapbox.marker.icon({
-       'marker-color': 'ff8888'
+       'marker-color': 'f28b9a'
    })
 }).bindPopup('{{description8|safe}}').addTo(map);
 
 var fixedMarker = L.marker(new L.LatLng({{lat9}}, {{long9}}), {
    icon: L.mapbox.marker.icon({
-       'marker-color': 'ff8888'
+       'marker-color': 'f28b9a'
    })
 }).bindPopup('{{description9|safe}}').addTo(map);
 
 var fixedMarker = L.marker(new L.LatLng({{lat10}}, {{long10}}), {
    icon: L.mapbox.marker.icon({
-       'marker-color': 'ff8888'
+       'marker-color': 'f28b9a'
    })
 }).bindPopup('{{description10|safe}}').addTo(map);
 
 </script>
+
+
+</div><!--end map-->
+
+<div class="footer">
+  <p>Copyright FlightFest. All rights reserved.</p>
+</div>
+
 </body>
 </html>
