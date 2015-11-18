@@ -34,8 +34,6 @@ def render_home_page():
 @app.route('/', methods=['POST'])
 def get_and_show_results():
     search_terms = request.form['search_terms']
-    start_date = request.form['start_date']
-    end_date = request.form['end_date']
 
     events = get_events(search_terms)
 
