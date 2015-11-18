@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="shortcut icon" href="static/assets/ico/favicon.png">
-  
+
 
     <title>FlightFest</title>
 
@@ -18,165 +18,141 @@
     <!-- Custom styles for this template -->
     <link href="static/assets/css/font-awesome.min.css" rel="stylesheet">
 
-      <!-- Datepicker stylesheets -->
+    <!-- Datepicker stylesheets -->
     <link rel="stylesheet" href="static/assets/css/datepicker.css">
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
-  <script>
-  $(function() {
-    $( "#from" ).datepicker({
-      defaultDate: "+1w",
-      changeMonth: true,
-      numberOfMonths: 1,
-      onClose: function( selectedDate ) {
-        $( "#to" ).datepicker( "option", "minDate", selectedDate );
-      }
-    });
-    $( "#to" ).datepicker({
-      defaultDate: "+1w",
-      changeMonth: true,
-      numberOfMonths: 1,
-      onClose: function( selectedDate ) {
-        $( "#from" ).datepicker( "option", "maxDate", selectedDate );
-      }
-    });
-  });
-  </script>
+    <script>
+        $(function() {
+            $( "#from" ).datepicker({
+                defaultDate: "+1w",
+                changeMonth: true,
+                numberOfMonths: 1,
+                onClose: function( selectedDate ) {
+                    $( "#to" ).datepicker( "option", "minDate", selectedDate );
+                }
+            });
+            $( "#to" ).datepicker({
+                defaultDate: "+1w",
+                changeMonth: true,
+                numberOfMonths: 1,
+                onClose: function( selectedDate ) {
+                    $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+                }
+            });
+        });
+    </script>
 
-  <!--end date picker-->
+    <!--end date picker-->
 
-  <script>
-var x = document.getElementById("demo");
+    <script>
+        var x = document.getElementById("demo");
 
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-    } else { 
-        x.innerHTML = "Geolocation is not supported by this browser.";
-    }
-}
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
 
-function showPosition(position) {
-    x.innerHTML = "Latitude: " + position.coords.latitude + 
-    "<br>Longitude: " + position.coords.longitude;  
-}
-</script>
-
+        function showPosition(position) {
+            x.innerHTML = "Latitude: " + position.coords.latitude +
+                    "<br>Longitude: " + position.coords.longitude;
+        }
+    </script>
 </head>
 
-  <body>
+<body>
 
-    <!-- Fixed navbar -->
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
+<!-- Fixed navbar -->
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/"><img src="static/assets/img/Flight-fest-logo.png" alt="" height="65"></a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/"><img src="static/assets/img/Flight-fest-logo.png" alt="" height="65"></a>
         </div>
         <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="/">HOME</a></li>
-          </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a href="/">HOME</a></li>
+            </ul>
         </div><!--/.nav-collapse -->
-      </div>
     </div>
+</div>
 
-	<div id="headerwrap">
-		<div class="container">
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
-      <div style="input-fields">
-        <form action="." method="POST">
-              <div class="input-fields">
+<div id="headerwrap">
+    <div class="container">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div style="input-fields">
+            <form action="." method="POST">
+                <div class="input-fields">
+                    <div id="left_side"  style="width:20% float: left">
+                        <div id="search_terms"><input name = "search_terms"
+                                                      type="text"
+                                                      placeholder="Enter artist"
+                                                      value="{{search_terms}}">
+                        </div>
+                    </div>
 
-                <div id="left_side"  style="width:20% float: left">
-  	                <div id="search_terms"><input name = "search_terms"
-                                                    type="text"
-                                                    placeholder="Enter artist"
-                                                    value="{{search_terms}}">
-  	                </div>
-  	            </div>
+                    <div id="right_side" style="width:20% float: left">
+                        <input type="text" id="from" name="from" placeholder="Start date">
+                    </div>
 
-                <div id="right_side" style="width:20% float: left">
-                  <input type="text" id="from" name="from" placeholder="Start date">
-                </div>
+                    <div id="far_side" style="width:20% float: left">
+                        <input type="text" id="to" name="to" placeholder="End date">
+                    </div> -->
+                </div><!-- input fields -->
 
+                <div class="find_recs_button">
+                    <input class='btn btn-primary' type='submit' value="Find shows">
+                </div><!-- find recs button -->
+            </form>
+        </div>
+    </div><!-- container -->
+</div><!-- headerwrap -->
 
-              	<div id="far_side" style="width:20% float: left">
-                    <input type="text" id="to" name="to" placeholder="End date">
-  	            </div> -->
-	         </div> 
-            	<div class="find_recs_button"> 
-            		<input class='btn btn-primary' type='submit' value="Find shows">
-            	</div>
-        </form>
-      </div>
-
-
-		</div><!-- container -->
-
-
-
-
-	</div><!-- headerwrap -->
-
-      <div class="about-content container-icons">
-        <h1 class="how-content">How it works</h1>
-      
-
-      <div class="icons-content">
-
+<div class="about-content container-icons">
+    <h1 class="how-content">How it works</h1>
+    <div class="icons-content">
         <div class="select-artist">
-          <h1 class="number">1</h1>
+            <h1 class="number">1</h1>
             <h3 class="icons-description">Enter Your Airport Location</h3>
-              <img class="icon" src="static/assets/img/location.png">
+            <img class="icon" src="static/assets/img/location.png">
         </div>
 
         <div class="select-artist">
-          <h1 class="number">2</h1>
+            <h1 class="number">2</h1>
             <h3 class="icons-description">Search for Artist, Genre or Festival</h3>
-              <img class="icon" src="static/assets/img/music.png">
+            <img class="icon" src="static/assets/img/music.png">
         </div>
 
         <div class="select-artist">
-          <h1 class="number">3</h1>
+            <h1 class="number">3</h1>
             <h3 class="icons-description">Select Your Date Range</h3>
-              <img class="icon" src="static/assets/img/calendar.png">
+            <img class="icon" src="static/assets/img/calendar.png">
         </div>
 
         <div class="select-artist">
-          <h1 class="number">4</h1>
+            <h1 class="number">4</h1>
             <h3 class="icons-description">Get Flight Recommendation</h3>
-              <img class="icon" src="static/assets/img/flight.png">
+            <img class="icon" src="static/assets/img/flight.png">
         </div>
+    </div>
+</div> <!--End about-content-->
 
-      </div>
-
-      </div>
-
-      </div> <!--End about-content-->
-
-      <div class="footer">
-        <p>Copyright FlightFest. All rights reserved.</p>
-      </div>
-
-
-
-    <!-- Bootstrap core JavaScript
-    ================================================== 
-    <!-- Placed at the end of the document so the pages load faster 
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="static/assets/js/bootstrap.min.js"></script> -->
-
-  </body>
+<div class="footer">
+    <p>Copyright FlightFest. All rights reserved.</p>
+</div>
+</body>
 </html>
