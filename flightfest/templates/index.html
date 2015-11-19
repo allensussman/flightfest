@@ -86,40 +86,30 @@
 </div>
 
 <div id="headerwrap">
-    <div class="container">
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <div style="input-fields">
-            <form action="." method="POST">
-                <div class="input-fields">
-                    <div id="left_side"  style="width:20% float: left">
-                        <div id="search_terms"><input name = "search_terms"
-                                                      type="text"
-                                                      placeholder="Enter artist"
-                                                      value="{{search_terms}}">
-                        </div>
-                    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <form action="." method="POST">
+        <div class="input-fields">
+            <div id="left_side"  style="width:20% float: left">
+                <input type="text" name="search_terms" placeholder="Enter artist">
+            </div>
 
-                    <div id="right_side" style="width:20% float: left">
-                        <input type="text" id="from" name="from" placeholder="Start date">
-                    </div>
+            <div id="right_side" style="width:20% float: left">
+                <input type="text" id="from" name="start_date" placeholder="Start date">
+            </div>
 
-                    <div id="far_side" style="width:20% float: left">
-                        <input type="text" id="to" name="to" placeholder="End date">
-                    </div> -->
-                </div><!-- input fields -->
+            <div id="far_side" style="width:20% float: left">
+                <input type="text" id="to" name="end_date" placeholder="End date">
+            </div>
+        </div><!-- input fields -->
 
-                <div class="find_recs_button">
-                    <input class='btn btn-primary' type='submit' value="Find shows">
-                </div><!-- find recs button -->
-            </form>
-        </div>
-    </div><!-- container -->
+        <input class='btn btn-primary' type='submit' value="Find shows">
+    </form>
 </div><!-- headerwrap -->
 
 <div class="about-content container-icons">
