@@ -5,9 +5,9 @@ import requests
 import json
 
 
-def get_events(query):
+def get_events(query, start_date, end_date):
     query = '&'.join([STUBHUB_EVENT_SEARCH_API, CONCERT_QUERY, SORT_BY_POPULARITY,
-                      ''.join(['q=', query])])
+                      ''.join(['q=', query]), ''.join(['date=', start_date, ' TO ', end_date])])
     headers = {'contentType': 'application/json',
                'Authorization': 'Bearer {}'.format(STUBHUB_API_KEY),
                'Accept': 'application/json'}

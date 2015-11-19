@@ -34,8 +34,10 @@ def render_home_page():
 @app.route('/', methods=['POST'])
 def get_and_show_results():
     search_terms = request.form['search_terms']
+    start_date = request.form['start_date']
+    end_date = request.form['end_date']
 
-    events = get_events(search_terms)
+    events = get_events(search_terms, dp_date_to_sh_date(start_date), dp_date_to_sh_date(end_date))
 
     if not events:
         return render_template("no_results.html")
@@ -166,6 +168,11 @@ def flight_string(departure_date, return_date, destination, flight_class):
     min_price = min_departure_price + min_return_price
 
     return "Flights from {} {}".format(min_price, most_common_currency)
+
+
+def dp_date_to_sh_date(date):
+    month, day, year = date.split('/')
+    return '-'.join([year, month, day])
 
 
 def min_flight_price(flights, currency):
