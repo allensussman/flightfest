@@ -416,7 +416,7 @@ a:after {
     background: #ff7878;
 }
 
-#where, #far_side, #left_side, #right_side {
+#where, #left_side, #center_left, #center_right, #right_side {
     display: inline-block;
     padding: 20px;
     color: #ffffff;

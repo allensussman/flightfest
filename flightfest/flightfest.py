@@ -3,7 +3,7 @@ import json
 from flask import Flask
 from flask import request
 from flask import render_template
-from constants import ORIGIN, STUBHUB_BASE_URL, DAYS_AFTER_TO_RETURN, DAYS_BEFORE_TO_DEPART, \
+from constants import STUBHUB_BASE_URL, DAYS_AFTER_TO_RETURN, DAYS_BEFORE_TO_DEPART, \
     FLIGHT_CLASS, USE_MOCK_EMIRATES_API_FOR_SPEED, MOCK_FLIGHT_CURRENCY, MOCK_MIN_FLIGHT_PRICE, \
     DATE_FORMAT, FLIGHT_URL_TEMPLATE, AIRPORT_LAT_LONG_FILE, AIRPORT_TIMEZONE_FILE
 from api_calls import get_events, get_listings, get_flights
@@ -23,8 +23,6 @@ with open(AIRPORT_LAT_LONG_FILE) as f:
 with open(AIRPORT_TIMEZONE_FILE) as f:
     AIRPORT_TIMEZONES = json.load(f)
 
-ORIGIN_TIMEZONE = AIRPORT_TIMEZONES[ORIGIN]
-
 
 @app.route('/')
 def render_home_page():
@@ -33,6 +31,7 @@ def render_home_page():
 
 @app.route('/', methods=['POST'])
 def get_and_show_results():
+    origin = request.form['origin']
     search_terms = request.form['search_terms']
     start_date = request.form['start_date']
     end_date = request.form['end_date']
@@ -47,7 +46,7 @@ def get_and_show_results():
     for idx, event in enumerate(events):
         params_dict['lat{}'.format(idx+1)] = event['venue']['latitude']
         params_dict['long{}'.format(idx+1)] = event['venue']['longitude']
-        params_dict['description{}'.format(idx+1)] = popup_content(event)
+        params_dict['description{}'.format(idx+1)] = popup_content(event, origin)
 
     for idx_2 in range(idx, 10):
         params_dict['lat{}'.format(idx_2+1)] = params_dict['lat1']
@@ -57,7 +56,7 @@ def get_and_show_results():
     return render_template("results.html", **params_dict)
 
 
-def popup_content(event):
+def popup_content(event, origin):
     # Set event name
     performers = event.get('performers')
     if performers:
@@ -94,7 +93,7 @@ def popup_content(event):
     image = '<img src="{}" alt="" style="width:100px">'.format(event['imageUrl'])
 
     # Set flight string
-    f_link = flight_link(venue_dict, event['eventDateUTC'], FLIGHT_CLASS)
+    f_link = flight_link(origin, venue_dict, event['eventDateUTC'], FLIGHT_CLASS)
 
     # Build popup content
     content = ' <br> '.join([image, name, venue, geo_string, date_str, f_link, tlink])
@@ -123,7 +122,7 @@ def ticket_link(event):
     return link(ticket_url, link_text)
 
 
-def flight_link(venue, concert_datetime_utc_str, flight_class):
+def flight_link(origin, venue, concert_datetime_utc_str, flight_class):
     # Determine departure and return dates.  Departure time is three days before the concert,
     # in the timezone of the origin airport, or the current time at the origin airport, whichever
     # is later.
@@ -131,7 +130,7 @@ def flight_link(venue, concert_datetime_utc_str, flight_class):
     min_departure_datetime_utc = (concert_datetime_utc - timedelta(days=DAYS_BEFORE_TO_DEPART))
     now_utc = datetime.utcnow()
     departure_datetime_utc = max(min_departure_datetime_utc, now_utc)
-    departure_datetime_local = departure_datetime_utc + timedelta(hours=ORIGIN_TIMEZONE)
+    departure_datetime_local = departure_datetime_utc + timedelta(hours=AIRPORT_TIMEZONES[origin])
     departure_date = departure_datetime_local.strftime(DATE_FORMAT)
 
     return_date = (concert_datetime_utc + timedelta(days=DAYS_AFTER_TO_RETURN)).strftime(DATE_FORMAT)
@@ -142,18 +141,18 @@ def flight_link(venue, concert_datetime_utc_str, flight_class):
     destination = min(zip(AIRPORT_LAT_LONGS, distances), key=itemgetter(1))[0]['code']
 
     # Set flight link text
-    link_text = flight_string(departure_date, return_date, destination, flight_class)
+    link_text = flight_string(departure_date, return_date, origin, destination, flight_class)
 
     # Set flight url
-    flight_url = FLIGHT_URL_TEMPLATE.format(ORIGIN, destination, departure_date, return_date)
+    flight_url = FLIGHT_URL_TEMPLATE.format(origin, destination, departure_date, return_date)
 
     return link(flight_url, link_text)
 
 
-def flight_string(departure_date, return_date, destination, flight_class):
+def flight_string(departure_date, return_date, origin, destination, flight_class):
     if not USE_MOCK_EMIRATES_API_FOR_SPEED:
-        departure_flights = get_flights(departure_date, ORIGIN, destination, flight_class)
-        return_flights = get_flights(return_date, destination, ORIGIN, flight_class)
+        departure_flights = get_flights(departure_date, origin, destination, flight_class)
+        return_flights = get_flights(return_date, destination, origin, flight_class)
 
         currencies = [flight['Currency'] for flight in departure_flights + return_flights]
         most_common_currency = Counter(currencies).most_common()[0][0]
