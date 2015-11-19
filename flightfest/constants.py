@@ -13,8 +13,6 @@ STUBHUB_BASE_URL = 'http://www.stubhub.com/'
 EMIRATES_API = \
     'https://ec2-54-77-6-21.eu-west-1.compute.amazonaws.com:8143/flightavailability/1.0/?'
 
-ORIGIN = 'SFO'
-
 DAYS_BEFORE_TO_DEPART = 3
 DAYS_AFTER_TO_RETURN = 3
 
