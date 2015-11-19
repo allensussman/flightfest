@@ -19,14 +19,14 @@
  #map { position:absolute; top:0; bottom:0; width:100%; }
  .leaflet-popup-content { padding:30px 30px;
   width: 400px;
-  font-size: 18px;
+  font-size: 14px;
     font-family: "Raleway";
     font-weight: 300;
     color: #3d3d3d;
     line-height: 1.4em;
   }
  .leaflet-container a {
-    font-size: 18px;
+    font-size: 14px;
     font-family: "Raleway";
     font-weight: 300;
     color: #89d5f4;
@@ -73,7 +73,7 @@
 <script>
 L.mapbox.accessToken = 'pk.eyJ1Ijoia2VsbHlkZXJuIiwiYSI6ImNpZ3BmaWpxeTAwdjF1eG0xdjdocmhvenYifQ.ua0dnrQ9efuNZxwGg7R9zA';
 var map = L.mapbox.map('map', 'mapbox.streets')
-   .setView([40, -74.50], 4);
+   .setView([50, -65], 2);
 
 var fixedMarker = L.marker(new L.LatLng({{lat1}}, {{long1}}), {
    icon: L.mapbox.marker.icon({
