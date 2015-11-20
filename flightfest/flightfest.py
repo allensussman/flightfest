@@ -1,11 +1,12 @@
 import json
+import traceback
 
 from flask import Flask
 from flask import request
 from flask import render_template
 from constants import STUBHUB_BASE_URL, DAYS_AFTER_TO_RETURN, DAYS_BEFORE_TO_DEPART, \
-    FLIGHT_CLASS, USE_EMIRATES_API, DATE_FORMAT, FLIGHT_URL_TEMPLATE, AIRPORT_LAT_LONG_FILE, \
-    AIRPORT_TIMEZONE_FILE
+    FLIGHT_CLASS, USE_EMIRATES_API, USE_MIN_TICKET_PRICE_IN_EVENT, DATE_FORMAT, \
+    FLIGHT_URL_TEMPLATE, AIRPORT_LAT_LONG_FILE, AIRPORT_TIMEZONE_FILE, NO_TICKETS_STR
 from api_calls import get_events, get_listings, get_flights
 from collections import Counter
 from datetime import datetime, timedelta
@@ -56,6 +57,7 @@ def get_and_show_results():
 
         return render_template("results.html", **params_dict)
     except:
+        traceback.print_exc()
         return render_template("error.html")
 
 
@@ -108,19 +110,29 @@ def ticket_link(event):
     ticket_url = ''.join([STUBHUB_BASE_URL, event['eventUrl']])
 
     # Set ticket link text
-    listings_dict = get_listings(event['id'])
-    listings = listings_dict['listing']
-
-    if listings:
-        currencies = [listing['currentPrice']['currency'] for listing in listings]
-        most_common_currency = Counter(currencies).most_common()[0][0]
-        min_price = min([listing['currentPrice']['amount'] for listing in listings
-                         if listing['currentPrice']['currency'] == most_common_currency])
-
-        link_text = "Tickets from {0:.2f} {1:s} (includes fees)".format(min_price,
-                                                                     most_common_currency)
+    if USE_MIN_TICKET_PRICE_IN_EVENT:
+        ticket_info = event.get('ticketInfo', {})
+        min_price = ticket_info.get('minListPrice')
+        currency = ticket_info.get('currencyCode')
+        num_listings = ticket_info.get('totalListings')
+        if min_price and currency and num_listings:
+            link_text = "{0:d} tickets from {1:.2f} {2:s}".format(num_listings, min_price, currency)
+        else:
+            link_text = NO_TICKETS_STR
     else:
-        link_text = "No tickets currently on StubHub"
+        listings_dict = get_listings(event['id'])
+        listings = listings_dict['listing']
+
+        if listings:
+            currencies = [listing['currentPrice']['currency'] for listing in listings]
+            most_common_currency = Counter(currencies).most_common()[0][0]
+            min_price = min([listing['currentPrice']['amount'] for listing in listings
+                             if listing['currentPrice']['currency'] == most_common_currency])
+
+            link_text = "Tickets from {0:.2f} {1:s} (includes fees)".format(min_price,
+                                                                         most_common_currency)
+        else:
+            link_text = NO_TICKETS_STR
 
     return link(ticket_url, link_text)
 
