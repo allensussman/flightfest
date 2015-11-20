@@ -31,29 +31,32 @@ def render_home_page():
 
 @app.route('/', methods=['POST'])
 def get_and_show_results():
-    origin = request.form['origin']
-    search_terms = request.form['search_terms']
-    start_date = request.form['start_date']
-    end_date = request.form['end_date']
+    try:
+        origin = request.form['origin']
+        search_terms = request.form['search_terms']
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
 
-    events = get_events(search_terms, dp_date_to_sh_date(start_date), dp_date_to_sh_date(end_date))
+        events = get_events(search_terms, dp_date_to_sh_date(start_date), dp_date_to_sh_date(end_date))
 
-    if not events:
-        return render_template("no_results.html")
+        if not events:
+            return render_template("no_results.html")
 
-    params_dict = {}
+        params_dict = {}
 
-    for idx, event in enumerate(events):
-        params_dict['lat{}'.format(idx+1)] = event['venue']['latitude']
-        params_dict['long{}'.format(idx+1)] = event['venue']['longitude']
-        params_dict['description{}'.format(idx+1)] = popup_content(event, origin)
+        for idx, event in enumerate(events):
+            params_dict['lat{}'.format(idx+1)] = event['venue']['latitude']
+            params_dict['long{}'.format(idx+1)] = event['venue']['longitude']
+            params_dict['description{}'.format(idx+1)] = popup_content(event, origin)
 
-    for idx_2 in range(idx, 10):
-        params_dict['lat{}'.format(idx_2+1)] = params_dict['lat1']
-        params_dict['long{}'.format(idx_2+1)] = params_dict['long1']
-        params_dict['description{}'.format(idx_2+1)] = params_dict['description1']
+        for idx_2 in range(idx, 10):
+            params_dict['lat{}'.format(idx_2+1)] = params_dict['lat1']
+            params_dict['long{}'.format(idx_2+1)] = params_dict['long1']
+            params_dict['description{}'.format(idx_2+1)] = params_dict['description1']
 
-    return render_template("results.html", **params_dict)
+        return render_template("results.html", **params_dict)
+    except:
+        return render_template("error.html")
 
 
 def popup_content(event, origin):
