@@ -4,8 +4,8 @@ from flask import Flask
 from flask import request
 from flask import render_template
 from constants import STUBHUB_BASE_URL, DAYS_AFTER_TO_RETURN, DAYS_BEFORE_TO_DEPART, \
-    FLIGHT_CLASS, USE_MOCK_EMIRATES_API_FOR_SPEED, MOCK_FLIGHT_CURRENCY, MOCK_MIN_FLIGHT_PRICE, \
-    DATE_FORMAT, FLIGHT_URL_TEMPLATE, AIRPORT_LAT_LONG_FILE, AIRPORT_TIMEZONE_FILE
+    FLIGHT_CLASS, USE_EMIRATES_API, DATE_FORMAT, FLIGHT_URL_TEMPLATE, AIRPORT_LAT_LONG_FILE, \
+    AIRPORT_TIMEZONE_FILE
 from api_calls import get_events, get_listings, get_flights
 from collections import Counter
 from datetime import datetime, timedelta
@@ -153,7 +153,7 @@ def flight_link(origin, venue, concert_datetime_utc_str, flight_class):
 
 
 def flight_string(departure_date, return_date, origin, destination, flight_class):
-    if not USE_MOCK_EMIRATES_API_FOR_SPEED:
+    if USE_EMIRATES_API:
         departure_flights = get_flights(departure_date, origin, destination, flight_class)
         return_flights = get_flights(return_date, destination, origin, flight_class)
 
@@ -162,14 +162,12 @@ def flight_string(departure_date, return_date, origin, destination, flight_class
 
         min_departure_price = min_flight_price(departure_flights, most_common_currency)
         min_return_price = min_flight_price(return_flights, most_common_currency)
+
+        min_price = min_departure_price + min_return_price
+
+        return "Flights from {} {}".format(min_price, most_common_currency)
     else:
-        most_common_currency = MOCK_FLIGHT_CURRENCY
-        min_departure_price = MOCK_MIN_FLIGHT_PRICE
-        min_return_price = MOCK_MIN_FLIGHT_PRICE
-
-    min_price = min_departure_price + min_return_price
-
-    return "Flights from {} {}".format(min_price, most_common_currency)
+        return "Find flights..."
 
 
 def dp_date_to_sh_date(date):
