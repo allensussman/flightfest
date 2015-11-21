@@ -96,6 +96,7 @@ a:after {
 
 .navbar-inverse .navbar-nav > .active > a {
 	background: #8ad6f5;
+    margin: 10px;
 }
 
 .navbar-inverse .navbar-brand {
@@ -440,7 +441,7 @@ a:after {
 }
 
 .about-content {
-    padding: 40px 0px;
+    padding: 40px 0px 300px 0px;
     text-align: center;
     color: #2d2d2d;
     font-weight: bold;
@@ -544,4 +545,10 @@ a:after {
 
 #map {
     padding: 60px 0px 0px 60px;
+}
+
+/*about page*/
+
+.github {
+    color: #54B999;
 }
