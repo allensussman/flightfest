@@ -65,13 +65,14 @@ def popup_content(event, origin):
     # Set event name
     performers = event.get('performers')
     if performers:
-        name = performers[0]['name']
+        raw_name = performers[0]['name']
     else:
         performers_collection = event.get('performersCollection')
         if performers_collection:
-            name = performers_collection[0]['name']
+            raw_name = performers_collection[0]['name']
         else:
-            name = event['name']
+            raw_name = event['name']
+    name = html_string(raw_name)
 
     # Set location string
     venue_dict = event['venue']
@@ -80,12 +81,13 @@ def popup_content(event, origin):
         geo_parts = [city, state, country]
     else:
         geo_parts = [city, country]
-    geo_string = ', '.join(geo_parts)
+    geo_string = html_string(', '.join(geo_parts))
+
 
     # Set venue name
     venue = event['displayAttributes'].get('primaryName')
     if not venue:
-        venue = venue_dict['name']
+        venue = html_string(venue_dict['name'])
 
     # Set date string
     date = event['eventDateLocal']
@@ -190,6 +192,10 @@ def dp_date_to_sh_date(date):
 def min_flight_price(flights, currency):
     return min([int(flight['FlightFare'].split(flight['Currency'])[0]) for flight in flights
                 if flight['Currency'] == currency])
+
+
+def html_string(string):
+    return string.replace('\'', '&#39;')
 
 
 def link(url, link_text):
