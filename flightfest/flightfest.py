@@ -55,6 +55,8 @@ def get_and_show_results():
             params_dict['long{}'.format(idx_2+1)] = params_dict['long1']
             params_dict['description{}'.format(idx_2+1)] = params_dict['description1']
 
+        params_dict['search_terms'] = html_string(search_terms)
+
         return render_template("results.html", **params_dict)
     except:
         traceback.print_exc()
