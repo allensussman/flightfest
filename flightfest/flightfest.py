@@ -38,13 +38,14 @@ def get_and_show_results():
         start_date = request.form['start_date']
         end_date = request.form['end_date']
 
-        events = get_events(search_terms, dp_date_to_sh_date(start_date), dp_date_to_sh_date(end_date))
+        events = get_events(search_terms, stubhub_date(start_date), stubhub_date(end_date))
 
         if not events:
             return render_template("no_results.html")
 
         params_dict = {}
 
+        idx = 0
         for idx, event in enumerate(events):
             params_dict['lat{}'.format(idx+1)] = event['venue']['latitude']
             params_dict['long{}'.format(idx+1)] = event['venue']['longitude']
@@ -64,7 +65,7 @@ def get_and_show_results():
 
 
 def popup_content(event, origin):
-    # Set event name
+    # Set event name.  The following seems to be the order of display-friendliness.
     performers = event.get('performers')
     if performers:
         raw_name = performers[0]['name']
@@ -85,8 +86,7 @@ def popup_content(event, origin):
         geo_parts = [city, country]
     geo_string = html_string(', '.join(geo_parts))
 
-
-    # Set venue name
+    # Set venue name.  The following seems to be the order of display-friendliness.
     venue = event['displayAttributes'].get('primaryName')
     if not venue:
         venue = html_string(venue_dict['name'])
@@ -101,7 +101,7 @@ def popup_content(event, origin):
     # Set image
     image = '<img src="{}" alt="" style="width:100px">'.format(event['imageUrl'])
 
-    # Set flight string
+    # Set flight link
     f_link = flight_link(origin, venue_dict, event['eventDateUTC'], FLIGHT_CLASS)
 
     # Build popup content
@@ -115,6 +115,7 @@ def ticket_link(event):
 
     # Set ticket link text
     if USE_MIN_TICKET_PRICE_IN_EVENT:
+        # Get min ticket price from event
         ticket_info = event.get('ticketInfo', {})
         min_price = ticket_info.get('minListPrice')
         currency = ticket_info.get('currencyCode')
@@ -124,17 +125,19 @@ def ticket_link(event):
         else:
             link_text = NO_TICKETS_STR
     else:
+        # Get min ticket price by using StubHub Inventory Search API
         listings_dict = get_listings(event['id'])
         listings = listings_dict['listing']
 
         if listings:
+            # Find most common currency and min of prices with that currency
             currencies = [listing['currentPrice']['currency'] for listing in listings]
             most_common_currency = Counter(currencies).most_common()[0][0]
             min_price = min([listing['currentPrice']['amount'] for listing in listings
                              if listing['currentPrice']['currency'] == most_common_currency])
 
             link_text = "Tickets from {0:.2f} {1:s} (includes fees)".format(min_price,
-                                                                         most_common_currency)
+                                                                            most_common_currency)
         else:
             link_text = NO_TICKETS_STR
 
@@ -152,7 +155,8 @@ def flight_link(origin, venue, concert_datetime_utc_str, flight_class):
     departure_datetime_local = departure_datetime_utc + timedelta(hours=AIRPORT_TIMEZONES[origin])
     departure_date = departure_datetime_local.strftime(DATE_FORMAT)
 
-    return_date = (concert_datetime_utc + timedelta(days=DAYS_AFTER_TO_RETURN)).strftime(DATE_FORMAT)
+    return_datetime = concert_datetime_utc + timedelta(days=DAYS_AFTER_TO_RETURN)
+    return_date = return_datetime.strftime(DATE_FORMAT)
 
     # Find nearest airport to venue
     distances = [vincenty((venue['latitude'], venue['longitude']),
@@ -173,6 +177,7 @@ def flight_string(departure_date, return_date, origin, destination, flight_class
         departure_flights = get_flights(departure_date, origin, destination, flight_class)
         return_flights = get_flights(return_date, destination, origin, flight_class)
 
+        # Find most common currency and min of prices with that currency
         currencies = [flight['Currency'] for flight in departure_flights + return_flights]
         most_common_currency = Counter(currencies).most_common()[0][0]
 
@@ -186,12 +191,23 @@ def flight_string(departure_date, return_date, origin, destination, flight_class
         return "Find flights..."
 
 
-def dp_date_to_sh_date(date):
+def stubhub_date(date):
     month, day, year = date.split('/')
     return '-'.join([year, month, day])
 
 
 def min_flight_price(flights, currency):
+    """Of flights using a certain currency, returns the min price.
+
+    Args:
+        flights (list of dicts): list of flights e.g.
+            [{'FlightFare': '1200AED', 'Currency': 'AED', 'FlightNo': 'EK542', ...},
+             {'FlightFare': '1000USD', 'Currency': 'USD', 'FlightNo': 'EK545', ....},
+             ...]
+        currency (string): only consider flights with this currency
+
+    """
+    # flight dict looks like e.g. {'FlightFare': '1200AED', 'Currency': 'AED'}
     return min([int(flight['FlightFare'].split(flight['Currency'])[0]) for flight in flights
                 if flight['Currency'] == currency])
 
