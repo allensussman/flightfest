@@ -14,9 +14,11 @@ DESCRIPTION = 'From OpenFlights\' airport.dat (http://openflights.org/data.html)
 
 def output_lat_long_file(airport_data_file, lat_long_file):
     with open(airport_data_file) as f:
-        # Don't include airports with \N for ICAO code or with 'Muni' (for municipal) in the name
+        # Don't include airports with \N for ICAO code or with 'Muni' (for municipal) or 'Heli'
+        # in the name
         lat_longs = [{'code': row[4], 'lat': float(row[6]), 'long': float(row[7])}
-                     for row in csv.reader(f) if row[4] and row[5] != '\N' and 'Muni' not in row[1]]
+                     for row in csv.reader(f) if row[4] and row[5] != '\N'
+                     and 'Muni' not in row[1] and 'Heli' not in row[1]]
     output_json(lat_longs, lat_long_file)
 
 
