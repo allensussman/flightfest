@@ -1,6 +1,6 @@
 from constants import STUBHUB_EVENT_SEARCH_API, STUBHUB_INVENTORY_SEARCH_API, CONCERT_QUERY, \
     EMIRATES_API, SORT_BY_POPULARITY, FIELD_LIST
-from config_local import EMIRATES_API_KEY, STUBHUB_API_KEY
+from config import EMIRATES_API_KEY, STUBHUB_API_KEY
 import requests
 import json
 
