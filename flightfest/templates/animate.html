@@ -23,12 +23,45 @@
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
-    <!--end date picker-->
-
     <!--Favicon-->
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <style>
 
+    circle.left = 0%
+animate duration: 2s {
+  circle.left = 100% 
+}
+</style>
+
+    <script>
+        $(function() {
+            $( "#from" ).datepicker({
+                defaultDate: "+1w",
+                changeMonth: true,
+                changeYear: true,
+                numberOfMonths: 1,
+                yearRange: '2015:2020',
+                onClose: function( selectedDate ) {
+                    $( "#to" ).datepicker( "option", "minDate", selectedDate );
+                }
+            });
+            $( "#to" ).datepicker({
+                defaultDate: "+1w",
+                changeMonth: true,
+                changeYear: true,
+                numberOfMonths: 1,
+                yearRange: '2015:2020',
+                onClose: function( selectedDate ) {
+                    $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+                }
+            });
+        });
+    </script>
+
+    <!--end date picker-->
 </head>
+
+
 
 <body>
 
@@ -46,31 +79,13 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="/">HOME</a></li>
-                <li class="active about"><a href="/">ABOUT</a></li>
+                <li class="active about"><a href="http://www.flightfest.co/about.html">ABOUT</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
 </div>
 
 
-<div class="about-content container-icons">
-    <div class="icons-content">
-        <!--Allen-->
-        <div class="select-artist">
-            <img class="icon" src="static/assets/img/AllenSussman.png">
-                <h3 class="icons-description">Allen Sussman</h3>
-                <p>Data Scientist, Back-End Engineer, and Music Nerd</p>
-                <a class="github" href="https://github.com/allensussman" target="_blank">github.com/allensussman</a>
-        </div>
-        <!--Kelly-->
-        <div class="select-artist">
-            <img class="icon" src="static/assets/img/KellyDern.png">
-                <h3 class="icons-description">Kelly Dern</h3>
-                <p>Designer, Front-End Developer, and Chocolatier</p>
-                <a class="github" href="https://github.com/kellydern" target="_blank">github.com/kellydern</a>
-        </div>
-    </div>
-</div> <!--End about-content-->
 
 <div class="footer">
     <p>Copyright FlightFest. All rights reserved.</p>

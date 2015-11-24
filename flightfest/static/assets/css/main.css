@@ -552,3 +552,17 @@ a:after {
 .github {
     color: #54B999;
 }
+
+/*search results page */
+
+.search-results {
+    font-family: "Raleway";
+    color: #333;
+    font-size: 46px;
+    color: #FFFFFF;
+    padding: 80px 0px 20px 0px;
+}
+
+.surprise-me {
+    padding: 50px 0px 20px 0px;
+}

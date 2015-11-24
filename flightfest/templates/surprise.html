@@ -23,11 +23,35 @@
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
-    <!--end date picker-->
-
     <!--Favicon-->
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 
+    <script>
+        $(function() {
+            $( "#from" ).datepicker({
+                defaultDate: "+1w",
+                changeMonth: true,
+                changeYear: true,
+                numberOfMonths: 1,
+                yearRange: '2015:2020',
+                onClose: function( selectedDate ) {
+                    $( "#to" ).datepicker( "option", "minDate", selectedDate );
+                }
+            });
+            $( "#to" ).datepicker({
+                defaultDate: "+1w",
+                changeMonth: true,
+                changeYear: true,
+                numberOfMonths: 1,
+                yearRange: '2015:2020',
+                onClose: function( selectedDate ) {
+                    $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+                }
+            });
+        });
+    </script>
+
+    <!--end date picker-->
 </head>
 
 <body>
@@ -46,28 +70,46 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="/">HOME</a></li>
-                <li class="active about"><a href="/">ABOUT</a></li>
+                <li class="active about"><a href="http://www.flightfest.co/about.html">ABOUT</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
 </div>
 
+<div id="headerwrap">
+<div class="surprise-me">
+    <h3 class="search-results">Can't Find What You're Looking For? Let Us Help!</h3>
+</div>
+    <form action="." method="POST">
+        <input class='btn btn-primary' type='submit' value="Surprise Me">
+    </form>
+</div><!-- headerwrap -->
 
 <div class="about-content container-icons">
+    <h1 class="how-content">How it works</h1>
     <div class="icons-content">
-        <!--Allen-->
         <div class="select-artist">
-            <img class="icon" src="static/assets/img/AllenSussman.png">
-                <h3 class="icons-description">Allen Sussman</h3>
-                <p>Data Scientist, Back-End Engineer, and Music Nerd</p>
-                <a class="github" href="https://github.com/allensussman" target="_blank">github.com/allensussman</a>
+            <h1 class="number">1</h1>
+            <h3 class="icons-description">Enter Your Airport Location</h3>
+            <img class="icon" src="static/assets/img/location.png">
         </div>
-        <!--Kelly-->
+
         <div class="select-artist">
-            <img class="icon" src="static/assets/img/KellyDern.png">
-                <h3 class="icons-description">Kelly Dern</h3>
-                <p>Designer, Front-End Developer, and Chocolatier</p>
-                <a class="github" href="https://github.com/kellydern" target="_blank">github.com/kellydern</a>
+            <h1 class="number">2</h1>
+            <h3 class="icons-description">Search for Artist, Genre or Festival</h3>
+            <img class="icon" src="static/assets/img/music.png">
+        </div>
+
+        <div class="select-artist">
+            <h1 class="number">3</h1>
+            <h3 class="icons-description">Select Your Date Range</h3>
+            <img class="icon" src="static/assets/img/calendar.png">
+        </div>
+
+        <div class="select-artist">
+            <h1 class="number">4</h1>
+            <h3 class="icons-description">Get Flight Recommendation</h3>
+            <img class="icon" src="static/assets/img/flight.png">
         </div>
     </div>
 </div> <!--End about-content-->
