@@ -159,9 +159,16 @@ def flight_link(origin, venue, concert_datetime_utc_str, flight_class):
     return_date = return_datetime.strftime(DATE_FORMAT)
 
     # Find nearest airport to venue
-    distances = [vincenty((venue['latitude'], venue['longitude']),
-                          (airport['lat'], airport['long'])) for airport in AIRPORT_LAT_LONGS]
-    destination = min(zip(AIRPORT_LAT_LONGS, distances), key=itemgetter(1))[0]['code']
+    lat_longs_and_distances = []
+    for airport in AIRPORT_LAT_LONGS:
+        try:
+            distance = vincenty((venue['latitude'], venue['longitude']),
+                                (airport['lat'], airport['long']))
+            lat_longs_and_distances += [(airport, distance)]
+        except ValueError:
+            # Vincenty has a bug and will (very infrequently) not converge and throw a ValueError
+            pass
+    destination = min(lat_longs_and_distances, key=itemgetter(1))[0]['code']
 
     # Set flight link text
     link_text = flight_string(departure_date, return_date, origin, destination, flight_class)
