@@ -30,6 +30,11 @@ def render_home_page():
     return render_template("index.html")
 
 
+@app.route('/about.html')
+def render_about_page():
+    return render_template("about.html")
+
+
 @app.route('/', methods=['POST'])
 def get_and_show_results():
     try:
