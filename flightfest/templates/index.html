@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="static/assets/ico/favicon.png">
 
 
     <title>FlightFest</title>
@@ -18,10 +17,15 @@
     <!-- Custom styles for this template -->
     <link href="static/assets/css/font-awesome.min.css" rel="stylesheet">
 
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+
     <!-- Datepicker stylesheets -->
     <link rel="stylesheet" href="static/assets/css/datepicker.css">
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+    <!--Favicon-->
+    <link rel="shortcut icon" type="image/x-icon" href="static/assets/img/favicon.ico">
 
     <script>
         $(function() {
@@ -78,6 +82,7 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="/">HOME</a></li>
+                <li class="active about"><a href="/about.html">ABOUT</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
@@ -110,32 +115,39 @@
             </div>
         </div><!-- input fields -->
 
-        <input class='btn btn-primary' type='submit' value="Find shows">
+        <input class='btn btn-primary' type='submit' value="Find shows" onclick="$('#loading').show();"/>
     </form>
+
+    <br>
+    <br>
+    <br>
+    <div class="please-wait-container" id="loading" style="display:none;">
+        <img src="static/assets/img/flightfest-loading.gif" alt="" />
+    </div>
 </div><!-- headerwrap -->
 
 <div class="about-content container-icons">
     <h1 class="how-content">How it works</h1>
     <div class="icons-content">
-        <div class="select-artist" style="width:20%">
+        <div class="select-artist">
             <h1 class="number">1</h1>
             <h3 class="icons-description">Enter Your Airport Location</h3>
             <img class="icon" src="static/assets/img/location.png">
         </div>
 
-        <div class="select-artist" style="width:20%">
+        <div class="select-artist">
             <h1 class="number">2</h1>
             <h3 class="icons-description">Search for Artist, Genre or Festival</h3>
             <img class="icon" src="static/assets/img/music.png">
         </div>
 
-        <div class="select-artist" style="width:20%">
+        <div class="select-artist">
             <h1 class="number">3</h1>
             <h3 class="icons-description">Select Your Date Range</h3>
             <img class="icon" src="static/assets/img/calendar.png">
         </div>
 
-        <div class="select-artist" style="width:20%">
+        <div class="select-artist">
             <h1 class="number">4</h1>
             <h3 class="icons-description">Get Flight Recommendation</h3>
             <img class="icon" src="static/assets/img/flight.png">
